@@ -1,0 +1,10 @@
+flask
+gunicorn
+pandas
+numpy
+scikit-learn
+scipy
+joblib
+jinja2
+werkzeug
+python-dateutil
