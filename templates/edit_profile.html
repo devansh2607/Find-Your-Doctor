@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block extra_head %}
+<style>
+.ep{max-width:800px;margin:40px auto;padding:0 24px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+.cd{background:rgba(29,78,216,0.06);border:1px solid rgba(29,78,216,0.2);border-radius:8px;padding:10px 14px;font-size:13px;margin-top:8px;font-weight:600;color:var(--blue)}
+</style>
+{% endblock %}
+{% block content %}
+<div class="ep">
+  <a href="/doctor/dashboard" style="color:var(--gray);font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:24px"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+  <h1 style="font-family:'Inter',serif;font-size:28px;font-weight:700;margin-bottom:8px">Edit Your Profile</h1>
+  <p style="color:var(--gray);margin-bottom:32px">Keep your information up to date</p>
+  <div class="card">
+    <form method="POST" action="/doctor/edit-profile">
+      <div class="fr">
+        <div class="form-group"><label class="form-label">Specialization</label><select name="specialization" class="form-control">{% for s in ['Allergist','Cardiologist','Dermatologist','ENT Specialist','Endocrinologist','Gastroenterologist','General Physician','Gynecologist','Hematologist','Infectious Disease','Nephrologist','Neurologist','Oncologist','Ophthalmologist','Orthopedist','Pediatrician','Psychiatrist','Pulmonologist','Rheumatologist','Urologist'] %}<option {{ 'selected' if doctor and doctor.specialization==s }}>{{ s }}</option>{% endfor %}</select></div>
+        <div class="form-group"><label class="form-label">Experience (Years)</label><input type="number" name="experience" class="form-control" value="{{ doctor.experience if doctor }}"></div>
+      </div>
+      <div class="fr">
+        <div class="form-group"><label class="form-label">Fees (₹)</label><input type="number" name="fees" class="form-control" value="{{ doctor.fees if doctor }}"></div>
+        <div class="form-group"><label class="form-label">Phone</label><input type="tel" name="phone" class="form-control" value="{{ doctor.phone if doctor }}"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Hospital / Clinic</label><input type="text" name="hospital" class="form-control" value="{{ doctor.hospital if doctor }}"></div>
+      <div class="fr">
+        <div class="form-group"><label class="form-label">Area</label><input type="text" name="area" class="form-control" value="{{ doctor.area if doctor }}"></div>
+        <div class="form-group"><label class="form-label">City</label><select name="city" class="form-control">{% for c in ['Delhi','Mumbai','Bangalore','Chennai','Hyderabad'] %}<option {{ 'selected' if doctor and doctor.city==c }}>{{ c }}</option>{% endfor %}</select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Availability</label><input type="text" name="availability" class="form-control" value="{{ doctor.availability if doctor }}"></div>
+      <div class="fr"><div class="form-group"><label class="form-label">Latitude</label><input type="text" name="latitude" class="form-control" value="{{ doctor.latitude if doctor }}" placeholder="e.g. 28.6139"></div><div class="form-group"><label class="form-label">Longitude</label><input type="text" name="longitude" class="form-control" value="{{ doctor.longitude if doctor }}" placeholder="e.g. 77.2090"></div></div>
+      <div class="form-group"><label class="form-label">Bio</label><textarea name="bio" class="form-control" rows="4">{{ doctor.bio if doctor }}</textarea></div>
+      <div style="display:flex;gap:12px">
+        <button type="submit" class="btn btn-primary" style="padding:13px 28px"><i class="fas fa-save"></i> Save Changes</button>
+        <a href="/doctor/dashboard" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+</script>
+{% endblock %}

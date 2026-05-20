@@ -1,0 +1,4 @@
+user_id,name,email,password_hash,role,city,created_at
+USR0001,Test Patient,patient@test.com,d4587ea9ead060c13fd994f21ecfa7926272a78854a2c20136b10a3c9e53e71e,patient,Delhi,2026-05-19T18:21:00.064777
+USR0002,praveen singh,praveen@gmail.com,ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f,patient,Delhi,2026-05-20T08:05:26.892853
+USR0003,DEVANSH KUMAR,devanshkumar1103@gmail.com,a607aad4e71ece46fe4fccd41d31ff2d4225431f46d858d8804d073c378a5d53,patient,Delhi,2026-05-20T14:53:59.556328

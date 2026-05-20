@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}{{ doctor.name }}{% endblock %}
+{% block extra_head %}
+<style>
+.ph{background:linear-gradient(135deg,var(--blue-deeper),var(--blue));padding:48px 24px;color:white}
+.phi{max-width:1000px;margin:0 auto;display:flex;gap:32px;align-items:center}
+.pa{width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.2);border:4px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:52px;flex-shrink:0}
+.pn{font-family:'Inter',serif;font-size:32px;font-weight:700;margin-bottom:6px}
+.pl{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pc{background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.plo{max-width:1000px;margin:40px auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:28px}
+.ist{margin-bottom:28px}
+.istt{font-family:'Inter',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid rgba(29,78,216,0.12);display:flex;align-items:center;gap:8px}
+.istt i{color:var(--blue)}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.il{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:4px}
+.iv{font-size:15px;font-weight:600}
+.dm{height:250px;border-radius:12px;overflow:hidden;margin-top:8px}
+.bc{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;position:sticky;top:90px;border:2px solid rgba(29,78,216,0.1)}
+.bf{font-family:'Inter',serif;font-size:32px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.bfl{font-size:13px;color:var(--gray);margin-bottom:20px}
+.bkb{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue-deeper),var(--blue));color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.bkb:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(29,78,216,0.35)}
+.cr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F1F5F9;font-size:14px}
+.cr i{width:20px;color:var(--blue)}
+.rs{display:flex;gap:4px;cursor:pointer;margin:12px 0}
+.rst{font-size:28px;color:#CBD5E1;transition:color .15s}
+.rst.f{color:#F59E0B}
+.bm{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.bm.show{display:flex}
+.bmc{background:white;border-radius:20px;padding:32px;max-width:440px;width:100%;animation:sc .3s ease}
+@keyframes sc{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.bmt{font-family:'Inter',serif;font-size:22px;font-weight:700;margin-bottom:20px}
+</style>
+{% endblock %}
+{% block content %}
+<div class="ph">
+  <div class="phi">
+    <div class="pa">👨‍⚕️</div>
+    <div>
+      <div class="pn">{{ doctor.name }}</div>
+      <div style="opacity:.9;font-size:16px;font-weight:600">{{ doctor.specialization }}</div>
+      <div class="pl">
+        <span class="pc"><i class="fas fa-star" style="color:#FCD34D"></i>{{ doctor.rating }}({{ doctor.reviews }})</span>
+        <span class="pc"><i class="fas fa-briefcase-medical"></i>{{ doctor.experience }}yrs exp</span>
+        <span class="pc"><i class="fas fa-map-marker-alt"></i>{{ doctor.area }},{{ doctor.city }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="plo">
+  <div>
+    <div class="card">
+      <div class="ist"><div class="istt"><i class="fas fa-user-md"></i>About</div><p style="color:var(--gray);line-height:1.8;font-size:15px">{{ doctor.bio or 'Experienced specialist with dedicated focus on patient care.' }}</p></div>
+      <div class="ist"><div class="istt"><i class="fas fa-info-circle"></i>Professional Details</div>
+        <div class="ig">
+          <div><div class="il">Hospital</div><div class="iv">{{ doctor.hospital }}</div></div>
+          <div><div class="il">Specialization</div><div class="iv">{{ doctor.specialization }}</div></div>
+          <div><div class="il">Experience</div><div class="iv">{{ doctor.experience }} years</div></div>
+          <div><div class="il">Availability</div><div class="iv">{{ doctor.availability }}</div></div>
+          <div><div class="il">Location</div><div class="iv">{{ doctor.area }}, {{ doctor.city }}</div></div>
+          <div><div class="il">Phone</div><div class="iv">{{ doctor.phone }}</div></div>
+        </div>
+      </div>
+      
+      <div class="ist">
+        <div class="istt"><i class="fas fa-star"></i>Rate This Doctor</div>
+        <div class="rs" id="rs">{% for i in range(1,6) %}<span class="rst" data-v="{{ i }}" onmouseover="hov({{ i }})" onmouseleave="reset()" onclick="rate({{ i }})">★</span>{% endfor %}</div>
+        <div id="rf" style="font-size:13px;color:var(--gray)">Click a star to rate</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="bc">
+      <div class="bf">₹{{ doctor.fees }}</div>
+      <div class="bfl">Consultation Fee</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <span style="font-size:20px;color:#F59E0B">{% for i in range(doctor.rating|int) %}★{% endfor %}{% for i in range(5-doctor.rating|int) %}☆{% endfor %}</span>
+        <strong>{{ doctor.rating }}</strong><span style="color:var(--gray);font-size:13px">({{ doctor.reviews }})</span>
+      </div>
+      <button class="bkb" onclick="openBM()"><i class="fas fa-calendar-plus"></i> Book Appointment</button>
+      <a href="tel:{{ doctor.phone }}" class="btn btn-outline" style="width:100%;justify-content:center;padding:12px;margin-bottom:20px"><i class="fas fa-phone"></i> Call Doctor</a>
+      <div class="cr"><i class="fas fa-clock"></i>{{ doctor.availability }}</div>
+      <div class="cr"><i class="fas fa-map-marker-alt"></i>{{ doctor.area }}, {{ doctor.city }}</div>
+      <div class="cr"><i class="fas fa-hospital"></i>{{ doctor.hospital }}</div>
+      <div class="cr"><i class="fas fa-envelope"></i>{{ doctor.email }}</div>
+    </div>
+  </div>
+</div>
+<div class="bm" id="bm">
+  <div class="bmc">
+    <div class="bmt"><i class="fas fa-calendar-plus" style="color:var(--blue)"></i> Book Appointment</div>
+    <p style="color:var(--gray);font-size:14px;margin-bottom:20px">with <strong>{{ doctor.name }}</strong></p>
+    <div class="form-group"><label class="form-label">Date</label><input type="date" id="ad" class="form-control"></div>
+    <div class="form-group"><label class="form-label">Time</label><select id="at" class="form-control"><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option></select></div>
+    <div class="form-group"><label class="form-label">Symptoms / Notes</label><textarea id="as" class="form-control" rows="3" placeholder="Briefly describe your issue..."></textarea></div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button onclick="closeBM()" class="btn btn-outline" style="flex:1;justify-content:center">Cancel</button>
+      <button onclick="confirmBook()" class="btn btn-primary" style="flex:2;justify-content:center"><i class="fas fa-check"></i> Confirm</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+let sel=0;const did="{{ doctor.doctor_id }}",li={{ 'true' if session.get('uid') else 'false' }};
+
+function hov(v){document.querySelectorAll('.rst').forEach((s,i)=>s.classList.toggle('f',i<v))}
+function reset(){document.querySelectorAll('.rst').forEach((s,i)=>s.classList.toggle('f',i<sel))}
+async function rate(v){
+  if(!li){alert('Please login to rate.');return}sel=v;reset();
+  await fetch(`/api/doctors/${did}/rate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rating:v})});
+  document.getElementById('rf').innerHTML=`<span style="color:var(--green)">✅ Thanks! (${v}/5 stars)</span>`;
+}
+function openBM(){if(!li){if(confirm('Login to book?'))window.location.href='/login';return}document.getElementById('bm').classList.add('show');document.getElementById('ad').min=new Date().toISOString().split('T')[0]}
+function closeBM(){document.getElementById('bm').classList.remove('show')}
+async function confirmBook(){
+  const date=document.getElementById('ad').value,time=document.getElementById('at').value,syms=document.getElementById('as').value;
+  if(!date){alert('Please select a date.');return}
+  const r=await fetch('/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({doctor_id:did,date,time,symptoms:syms})});
+  const d=await r.json();
+  if(d.success){closeBM();alert(`✅ Booked!\nID: ${d.appointment_id}\n${date} at ${time}`)}
+}
+document.getElementById('bm').addEventListener('click',e=>{if(e.target===document.getElementById('bm'))closeBM()});
+</script>
+
+{% endblock %}

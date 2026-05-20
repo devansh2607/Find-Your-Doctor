@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% block title %}Register - FindYourDoctor{% endblock %}
+
+{% block extra_head %}
+<style>
+.ap{
+  min-height:calc(100vh - 72px);
+  padding:40px 20px;
+  background:linear-gradient(135deg,var(--blue-deeper) 0%,var(--blue) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.ap::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.ac{
+  background:white;
+  border-radius:24px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.3);
+  padding:40px;
+  width:100%;
+  max-width:760px;
+  position:relative;
+  animation:ai .4s ease;
+  z-index:1;
+}
+
+@keyframes ai{
+  from{
+    transform:translateY(20px);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+.at{
+  font-size:26px;
+  font-weight:700;
+  color:var(--dark);
+  margin-bottom:6px;
+  text-align:center;
+}
+
+.rt{
+  display:flex;
+  border:2px solid var(--blue);
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:28px;
+}
+
+.rtb{
+  flex:1;
+  padding:12px 16px;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
+  transition:all .2s;
+  background:transparent;
+  color:var(--blue);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+.rtb.active{
+  background:var(--blue);
+  color:white;
+}
+
+.fr{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.ab{
+  text-align:center;
+  margin-top:24px;
+  font-size:14px;
+  color:var(--gray);
+}
+
+.ab a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:600;
+}
+
+@media(max-width:700px){
+
+  .fr{
+    grid-template-columns:1fr;
+  }
+
+  .ac{
+    padding:28px 22px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ap">
+
+  <div class="ac">
+
+    <h1 class="at">Create Account</h1>
+
+    <p style="
+      color:var(--gray);
+      font-size:14px;
+      text-align:center;
+      margin-bottom:24px
+    ">
+      Join our healthcare platform
+    </p>
+
+    <div class="rt">
+      <button class="rtb active" id="pt" onclick="setRole('patient')">
+        <i class="fas fa-user"></i>
+        I'm a Patient
+      </button>
+
+      <button class="rtb" id="dt" onclick="setRole('doctor')">
+        <i class="fas fa-user-md"></i>
+        I'm a Doctor
+      </button>
+    </div>
+
+    <form method="POST" action="/register">
+
+      <input type="hidden" name="role" id="ri" value="patient">
+
+      <div class="fr">
+
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            placeholder="Your Full Name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="email@example.com"
+            required
+          >
+        </div>
+
+      </div>
+
+      <div class="fr">
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Min. 8 characters"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">City</label>
+
+          <select name="city" class="form-control" required>
+            <option value="">Select City</option>
+            <option>Delhi</option>
+            <option>Mumbai</option>
+            <option>Bangalore</option>
+            <option>Chennai</option>
+            <option>Hyderabad</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- DOCTOR FIELDS -->
+      <div id="df" style="display:none">
+
+        <div style="
+          border-top:2px dashed rgba(29,78,216,0.2);
+          padding-top:20px;
+          margin:20px 0
+        ">
+          <div style="
+            font-size:13px;
+            font-weight:700;
+            color:var(--blue);
+            text-transform:uppercase;
+            letter-spacing:.5px
+          ">
+            <i class="fas fa-stethoscope"></i>
+            Professional Details
+          </div>
+        </div>
+
+        <div class="fr">
+
+          <div class="form-group">
+            <label class="form-label">Specialization</label>
+
+           <select name="specialization" class="form-control">
+              <option value="">Select</option>
+
+              <option>Allergist</option>
+              <option>Cardiologist</option>
+              <option>Dentist</option>
+              <option>Dermatologist</option>
+              <option>ENT Specialist</option>
+              <option>Endocrinologist</option>
+               <option>Gastroenterologist</option>
+               <option>General Physician</option>
+               <option>Gynecologist</option>
+               <option>Hematologist</option>
+               <option>Infectious Disease</option>
+               <option>Nephrologist</option>
+               <option>Neurologist</option>
+               <option>Oncologist</option>
+               <option>Ophthalmologist</option>
+               <option>Orthopedist</option>
+               <option>Psychiatrist</option>
+               <option>Pulmonologist</option>
+               <option>Rheumatologist</option>
+               <option>Urologist</option>
+
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Experience (Years)</label>
+
+            <input
+              type="number"
+              name="experience"
+              class="form-control"
+              placeholder="e.g. 10"
+            >
+          </div>
+
+        </div>
+
+        <div class="fr">
+
+          <div class="form-group">
+            <label class="form-label">Fees (₹)</label>
+
+            <input
+              type="number"
+              name="fees"
+              class="form-control"
+              placeholder="500"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+
+            <input
+              type="tel"
+              name="phone"
+              class="form-control"
+              placeholder="+91-9876543210"
+            >
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hospital / Clinic</label>
+
+          <input
+            type="text"
+            name="hospital"
+            class="form-control"
+            placeholder="Apollo Hospital"
+          >
+        </div>
+
+        <div class="fr">
+
+          <div class="form-group">
+            <label class="form-label">Area</label>
+
+            <input
+              type="text"
+              name="area"
+              class="form-control"
+              placeholder="Koramangala"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Availability</label>
+
+            <input
+              type="text"
+              name="availability"
+              class="form-control"
+              placeholder="Mon-Sat 9AM-5PM"
+            >
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+
+          <textarea
+            name="bio"
+            class="form-control"
+            rows="3"
+            placeholder="Describe your expertise..."
+          ></textarea>
+        </div>
+
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="
+          width:100%;
+          justify-content:center;
+          padding:13px;
+          margin-top:8px
+        "
+      >
+        <i class="fas fa-user-plus"></i>
+        Create Account
+      </button>
+
+    </form>
+
+    <div class="ab">
+      Already have an account?
+      <a href="/login">Sign In</a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+
+function setRole(role){
+
+  const pt=document.getElementById('pt');
+  const dt=document.getElementById('dt');
+  const df=document.getElementById('df');
+  const ri=document.getElementById('ri');
+
+  if(role==='doctor'){
+
+    dt.classList.add('active');
+    pt.classList.remove('active');
+
+    df.style.display='block';
+
+    ri.value='doctor';
+  }
+
+  else{
+
+    pt.classList.add('active');
+    dt.classList.remove('active');
+
+    df.style.display='none';
+
+    ri.value='patient';
+  }
+}
+
+</script>
+{% endblock %}

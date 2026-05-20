@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Find Doctors{% endblock %}
+{% block extra_head %}
+<style>
+.ph{background:linear-gradient(135deg,var(--blue-deeper),var(--blue));color:white;padding:48px 24px}
+.ph-inner{max-width:1280px;margin:0 auto}
+.ph h1{font-family:'Inter',serif;font-size:36px;margin-bottom:8px}
+.fl{max-width:1280px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+.fp{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;position:sticky;top:90px}
+.ft{font-family:'Inter',serif;font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.fs{margin-bottom:20px}
+.fl-lbl{font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+input[type=range]{flex:1;accent-color:var(--blue)}
+.rv{font-size:13px;font-weight:700;color:var(--blue);white-space:nowrap}
+.loc-btn{width:100%;padding:10px 14px;background:linear-gradient(135deg,var(--blue-deeper),var(--blue));color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.loc-btn:hover{opacity:.9}
+.apl-btn{width:100%;padding:12px;background:var(--dark);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.apl-btn:hover{background:var(--blue-deeper)}
+.rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.rc{font-weight:700;font-size:16px}
+.ss{padding:8px 14px;border:2px solid #E2E8F0;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer}
+
+
+
+
+
+
+.dg{display:flex;flex-direction:column;gap:16px}
+.dc{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;display:grid;grid-template-columns:80px 1fr auto;gap:16px;align-items:start;border:2px solid transparent;transition:all .25s;position:relative;overflow:hidden}
+.dc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,var(--blue-deeper),var(--blue));opacity:0;transition:opacity .25s}
+.dc:hover{border-color:rgba(29,78,216,0.2);box-shadow:var(--shadow-lg)}
+.dc:hover::before{opacity:1}
+.da{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(29,78,216,0.1),rgba(59,130,246,0.15));display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--blue);flex-shrink:0}
+.dn{font-family:'Inter',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.ds{color:var(--blue);font-weight:600;font-size:13px;margin-bottom:8px}
+.dm2{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--gray);margin-bottom:10px}
+.dm2 span{display:flex;align-items:center;gap:5px}
+.dm2 i{color:var(--blue);font-size:12px}
+.dac{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.fb{background:linear-gradient(135deg,rgba(29,78,216,0.1),rgba(59,130,246,0.08));color:var(--blue-deeper);padding:6px 14px;border-radius:20px;font-weight:700;font-size:15px}
+.db{font-size:12px;font-weight:600;display:none}
+.db.show{display:block;background:rgba(29,78,216,0.08);color:var(--blue);padding:4px 10px;border-radius:20px}
+@media(max-width:900px){.fl{grid-template-columns:1fr}.fp{position:static}}
+</style>
+{% endblock %}
+{% block content %}
+<div class="ph"><div class="ph-inner"><h1>Find Your Doctor</h1><p style="opacity:.85;font-size:16px">Browse verified healthcare specialists across India</p></div></div>
+<div class="fl">
+  <aside class="fp">
+    <div class="ft"><i class="fas fa-sliders-h" style="color:var(--blue)"></i> Filters</div>
+    <div class="fs"><div class="fl-lbl">Specialization</div>
+      <select class="form-control" id="fSpec">
+        <option value="">All Specializations</option>
+        <option>Allergist</option><option>Cardiologist</option><option>Dermatologist</option>
+        <option>ENT Specialist</option><option>Endocrinologist</option><option>Gastroenterologist</option>
+        <option>General Physician</option><option>Gynecologist</option><option>Hematologist</option>
+        <option>Infectious Disease</option><option>Nephrologist</option><option>Neurologist</option>
+        <option>Oncologist</option><option>Ophthalmologist</option><option>Orthopedist</option>
+        <option>Pediatrician</option><option>Psychiatrist</option><option>Pulmonologist</option>
+        <option>Rheumatologist</option><option>Urologist</option>
+      </select>
+    </div>
+    <div class="fs"><div class="fl-lbl">City</div>
+      <select class="form-control" id="fCity"><option value="">All Cities</option><option>Delhi</option><option>Mumbai</option><option>Bangalore</option><option>Chennai</option><option>Hyderabad</option></select>
+    </div>
+    <div class="fs"><div class="fl-lbl">Max Fee</div><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fFees" min="100" max="2000" step="100" value="2000" oninput="document.getElementById('fv').textContent='₹'+this.value"><span class="rv" id="fv">₹2000</span></div></div>
+    <div class="fs"><div class="fl-lbl">Min Experience (Years)</div><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fExp" min="0" max="30" step="1" value="0" oninput="document.getElementById('ev').textContent=this.value+'yr'"><span class="rv" id="ev">0yr</span></div></div>
+    <div class="fs"><div class="fl-lbl">Nearby</div><button class="loc-btn" onclick="detectLoc()"><i class="fas fa-location-crosshairs"></i> Use My Location</button><div id="locSt" style="font-size:12px;color:var(--gray);margin-top:6px;display:none"></div><div style="margin-top:10px;display:none" id="df"><div class="fl-lbl">Max Distance</div><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fDist" min="1" max="50" value="50" oninput="document.getElementById('dv').textContent=this.value+'km'"><span class="rv" id="dv">50km</span></div></div></div>
+    <button class="apl-btn" onclick="loadDocs()"><i class="fas fa-search"></i> Apply Filters</button>
+  </aside>
+  <div>
+    <div class="rh">
+      <div class="rc" id="rc">Loading...</div>
+      <select class="ss" id="sb" onchange="loadDocs()">
+        <option value="rating">Best Rated</option>
+        <option value="fees_asc">Lowest Fee</option>
+        <option value="experience">Most Experienced</option>
+        <option value="distance">Nearest First</option>
+      </select>
+    </div>
+    <div id="dl" class="dg"><div class="spinner"></div></div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+let uLat=null,uLng=null,allDocs=[];
+const p=new URLSearchParams(window.location.search);
+if(p.get('spec'))document.getElementById('fSpec').value=p.get('spec');
+async function loadDocs(){
+  const spec=document.getElementById('fSpec').value,city=document.getElementById('fCity').value,
+    fees=document.getElementById('fFees').value,exp=document.getElementById('fExp').value,
+    dist=document.getElementById('fDist').value,sb=document.getElementById('sb').value;
+  let url=`/api/doctors?max_fees=${fees}&min_exp=${exp}&sort_by=${sb}`;
+  if(spec)url+=`&specialization=${encodeURIComponent(spec)}`;
+  if(city)url+=`&city=${encodeURIComponent(city)}`;
+  if(uLat)url+=`&lat=${uLat}&lng=${uLng}&max_distance=${dist}`;
+  document.getElementById('dl').innerHTML='<div class="spinner"></div>';
+  document.getElementById('rc').textContent='Loading...';
+  const r=await fetch(url),d=await r.json();
+  allDocs=d.doctors;renderDocs(d.doctors);
+
+}
+function renderDocs(docs){
+  document.getElementById('rc').textContent=`${docs.length} doctor${docs.length!==1?'s':''} found`;
+  if(!docs.length){document.getElementById('dl').innerHTML='<div class="card" style="text-align:center;padding:48px"><i class="fas fa-user-md" style="font-size:48px;color:var(--gray);margin-bottom:16px;display:block"></i><p style="color:var(--gray)">No doctors found. Try adjusting filters.</p></div>';return}
+  document.getElementById('dl').innerHTML=docs.map(d=>`
+    <div class="dc">
+      <div class="da"><i class="fas fa-user-md"></i></div>
+      <div>
+        <div class="dn">${d.name}</div>
+        <div class="ds"><i class="fas fa-stethoscope"></i> ${d.specialization}</div>
+        <div class="dm2">
+          <span><i class="fas fa-star" style="color:#F59E0B"></i> ${d.rating} (${d.reviews})</span>
+          <span><i class="fas fa-briefcase-medical"></i> ${d.experience}yr exp</span>
+          <span><i class="fas fa-hospital"></i> ${d.hospital}</span>
+          <span><i class="fas fa-map-marker-alt"></i> ${d.area}, ${d.city}</span>
+          <span><i class="fas fa-clock"></i> ${d.availability}</span>
+        </div>
+        ${d.distance_km?`<span class="db show"><i class="fas fa-location-dot"></i> ${d.distance_km} km away</span>`:''}
+      </div>
+      <div class="dac">
+        <div class="fb">₹${d.fees}</div>
+        <a href="/doctor/${d.doctor_id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+        <button class="btn btn-outline btn-sm" onclick="book('${d.doctor_id}','${d.name}')"><i class="fas fa-calendar-plus"></i> Book</button>
+      </div>
+    </div>`).join('');
+}
+function detectLoc(){
+  const st=document.getElementById('locSt');st.style.display='block';st.textContent='⏳ Detecting...';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    uLat=pos.coords.latitude;uLng=pos.coords.longitude;
+    st.textContent=`✅ Location found`;document.getElementById('df').style.display='block';
+    document.getElementById('sb').value='distance';loadDocs();
+  },()=>{st.textContent='❌ Permission denied'});
+}
+
+
+
+async function book(id,name){
+  const li={{ 'true' if session.get('uid') else 'false' }};
+  if(!li){if(confirm('Login to book?'))window.location.href='/login';return}
+  const date=prompt(`Book with ${name}\nDate (YYYY-MM-DD):`);if(!date)return;
+  const time=prompt('Time (e.g. 10:00 AM):');if(!time)return;
+  const syms=prompt('Symptoms (optional):')||'';
+  const r=await fetch('/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({doctor_id:id,date,time,symptoms:syms})});
+  const d=await r.json();
+  if(d.success)alert(`✅ Booked! ID: ${d.appointment_id}`);
+}
+loadDocs();
+</script>
+{% endblock %}

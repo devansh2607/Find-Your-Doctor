@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Login - FindYourDoctor{% endblock %}
+{% block extra_head %}
+<style>
+.ap{min-height:calc(100vh - 72px);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue-deeper) 0%,var(--blue) 100%);padding:40px 20px;position:relative}
+.ap::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")}
+.ac{background:white;border-radius:24px;box-shadow:0 32px 80px rgba(0,0,0,0.3);padding:48px 40px;width:100%;max-width:440px;position:relative;animation:ai .4s ease}
+@keyframes ai{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.al{text-align:center;margin-bottom:32px}
+.ali{width:64px;height:64px;background:linear-gradient(135deg,var(--blue-deeper),var(--blue));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;margin:0 auto 12px}
+.at{font-family:'Inter',serif;font-size:26px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.as{color:var(--gray);font-size:14px}
+.rt{display:flex;gap:0;border:2px solid var(--blue);border-radius:10px;overflow:hidden;margin-bottom:28px}
+.rtb{flex:1;padding:10px 16px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s;background:transparent;color:var(--blue);display:flex;align-items:center;justify-content:center;gap:6px}
+.rtb.active{background:var(--blue);color:white}
+.db2{background:rgba(29,78,216,0.05);border:1px dashed rgba(29,78,216,0.3);border-radius:10px;padding:12px 16px;margin-bottom:24px;font-size:13px}
+.db2 strong{color:var(--blue)}
+.ab{text-align:center;margin-top:24px;font-size:14px;color:var(--gray)}
+.ab a{color:var(--blue);text-decoration:none;font-weight:600}
+</style>
+{% endblock %}
+{% block content %}
+<div class="ap">
+  <div class="ac">
+    <div class="al">
+      <div class="ali"><i class="fas fa-stethoscope"></i></div>
+      <h1 class="at">Welcome Back</h1>
+      <p class="as">Sign in to your account</p>
+    </div>
+    <div class="rt">
+      <button class="rtb active" onclick="setRole('patient',this)"><i class="fas fa-user"></i> Patient</button>
+      <button class="rtb" onclick="setRole('doctor',this)"><i class="fas fa-user-md"></i> Doctor</button>
+    </div>
+    <div class="db2"><strong>Demo:</strong> patient@test.com / patient123</div>
+    <form method="POST" action="/login">
+      <input type="hidden" name="role" id="ri" value="patient">
+      <div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-control" placeholder="your@email.com" required></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" name="password" class="form-control" placeholder="••••••••" required></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:13px"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    </form>
+    <div class="ab">Don't have an account? <a href="/register">Create one</a></div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+function setRole(r,btn){document.querySelectorAll('.rtb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('ri').value=r}
+</script>
+{% endblock %}

@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block title %}Find Your Doctor - AI Healthcare{% endblock %}
+{% block extra_head %}
+<style>
+/* HERO */
+.hero{background:linear-gradient(135deg,#1A8FE3 0%,#0F72C4 60%,#0A5FA8 100%);padding:64px 24px 80px;position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none}
+.hero::before{content:'';position:absolute;right:80px;bottom:-60px;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;color:white;margin-bottom:20px}
+.hero-title{font-size:clamp(32px,4.5vw,52px);font-weight:800;color:white;line-height:1.15;margin-bottom:16px;letter-spacing:-0.5px}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:32px;max-width:480px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.hero-btn{padding:12px 24px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:all .2s;font-family:'Inter',sans-serif}
+.hero-btn-white{background:white;color:var(--blue-dark)}
+.hero-btn-white:hover{background:#F0F8FF;transform:translateY(-1px)}
+.hero-btn-ghost{background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.4)}
+.hero-btn-ghost:hover{background:rgba(255,255,255,0.25)}
+
+/* SYMPTOM CARD */
+.sym-card{background:white;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.18);padding:28px}
+.sym-card-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sym-card-title i{color:var(--blue)}
+.sym-input-wrap{position:relative;margin-bottom:14px}
+.sym-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;color:var(--dark)}
+.sym-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,143,227,0.1)}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid var(--blue);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);max-height:180px;overflow-y:auto;z-index:100;box-shadow:var(--shadow-md)}
+.ac-item{padding:10px 14px;cursor:pointer;font-size:13px;transition:background .15s;color:var(--dark)}
+.ac-item:hover{background:#EFF8FF;color:var(--blue)}
+.tags-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;min-height:32px}
+.tag{background:#EFF8FF;color:var(--blue);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px}
+.tag button{background:none;border:none;cursor:pointer;color:var(--blue);font-size:13px;line-height:1;padding:0;margin-left:2px}
+.get-btn{width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.get-btn:hover{background:var(--blue-dark)}
+.try-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.try-label{font-size:12px;color:var(--gray);white-space:nowrap}
+.try-chip{background:#F3F4F6;color:var(--gray);padding:4px 10px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .2s;border:none;font-family:'Inter',sans-serif;white-space:nowrap}
+.try-chip:hover{background:#EFF8FF;color:var(--blue)}
+.pred-box{margin-top:14px;padding:14px;background:#EFF8FF;border-radius:var(--radius-sm);border:1px solid rgba(26,143,227,0.2);display:none}
+.pred-box.show{display:block}
+.pred-spec{font-size:16px;font-weight:700;color:var(--blue-dark);margin-bottom:6px}
+.pred-conf{font-size:12px;color:var(--gray);margin-bottom:10px}
+.conf-bar{height:5px;background:#DBEAFE;border-radius:3px;overflow:hidden;margin-top:4px}
+.conf-fill{height:100%;background:var(--blue);border-radius:3px;transition:width .5s}
+
+/* STATS BAR */
+.stats-bar{background:white;border-bottom:1px solid var(--border);padding:28px 24px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
+.stat-item{padding:8px 0;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-size:32px;font-weight:800;color:var(--blue);line-height:1}
+.stat-num sup{font-size:18px}
+.stat-lbl{font-size:12px;color:var(--gray);margin-top:4px;font-weight:500}
+
+/* HOW IT WORKS */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px}
+.step-card{background:white;border-radius:var(--radius);padding:28px 20px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .25s}
+.step-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:rgba(26,143,227,0.2)}
+.step-num{width:48px;height:48px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:white;margin:0 auto 16px}
+.step-icon{font-size:24px;color:var(--blue);margin-bottom:10px}
+.step-title{font-weight:700;font-size:15px;margin-bottom:8px}
+.step-desc{color:var(--gray);font-size:13px;line-height:1.6}
+
+/* SPEC GRID */
+.spec-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px}
+.spec-chip{background:white;border-radius:var(--radius);padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s;border:1.5px solid var(--border);text-decoration:none;display:block}
+.spec-chip:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.spec-chip i{font-size:24px;color:var(--blue);margin-bottom:8px;display:block}
+.spec-chip span{font-size:12px;font-weight:600;color:var(--dark)}
+
+/* SECTION */
+.section-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px}
+.section-title{font-size:clamp(24px,3vw,34px);font-weight:800;color:var(--dark);line-height:1.25;letter-spacing:-0.3px}
+.section-title span{color:var(--blue)}
+.section-sub{color:var(--gray);margin-top:10px;font-size:14px;line-height:1.7}
+
+/* TESTIMONIALS */
+.testi-section{background:linear-gradient(135deg,#0A5FA8,#1A8FE3)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.testi-card{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius);padding:24px;backdrop-filter:blur(8px)}
+.testi-stars{color:#FCD34D;margin-bottom:12px;font-size:14px}
+.testi-text{font-size:14px;color:rgba(255,255,255,0.9);line-height:1.7;margin-bottom:18px}
+.testi-author{display:flex;align-items:center;gap:10px}
+.testi-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white}
+.testi-name{font-weight:700;color:white;font-size:14px}
+.testi-role{font-size:12px;color:rgba(255,255,255,0.7)}
+
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}.steps-grid{grid-template-columns:1fr 1fr}.spec-grid{grid-template-columns:repeat(3,1fr)}.testi-grid{grid-template-columns:1fr}.stats-inner{grid-template-columns:1fr 1fr}}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><i class="fas fa-robot" style="font-size:11px"></i> AI-Powered Recommendations</div>
+      <h1 class="hero-title">Find the Right<br>Doctor for You</h1>
+      <p class="hero-sub">Enter your symptoms and our Random Forest ML model instantly predicts the right medical specialist — no guessing, just science.</p>
+      <div class="hero-btns">
+        <a href="#checker" class="hero-btn hero-btn-white"><i class="fas fa-search"></i> Analyze Symptoms</a>
+        <a href="/find-doctors" class="hero-btn hero-btn-ghost">Browse Doctors</a>
+      </div>
+    </div>
+    <!-- SYMPTOM CARD -->
+    <div class="sym-card" id="checker">
+      <div class="sym-card-title"><i class="fas fa-stethoscope"></i> Quick Symptom Check</div>
+      <div class="tags-wrap" id="tagsWrap"></div>
+      <div class="sym-input-wrap">
+        <input type="text" class="sym-input" id="symInput" placeholder="e.g. fever, chest pain, headache" autocomplete="off">
+        <div class="ac-list" id="acList" style="display:none"></div>
+      </div>
+      <button class="get-btn" id="getBtn" onclick="predict()">Get Doctor Recommendations →</button>
+      <div class="try-row">
+        <span class="try-label">Try:</span>
+        <button class="try-chip" onclick="addSym('Chest Pain')">chest pain</button>
+        <button class="try-chip" onclick="addSym('Shortness Of Breath')">breathless</button>
+        <button class="try-chip" onclick="addSym('Skin Rash')">skin rash, itching</button>
+        <button class="try-chip" onclick="addSym('Fever')">fever, cough</button>
+        <button class="try-chip" onclick="addSym('Joint Pain')">joint pain</button>
+        <button class="try-chip" onclick="addSym('Tooth Pain')">tooth pain</button>
+        <button class="try-chip" onclick="addSym('Gum Bleeding')">gum bleeding</button>
+        <button class="try-chip" onclick="addSym('Jaw Pain')">jaw pain</button>
+      </div>
+      <div class="pred-box" id="predBox">
+        <div class="pred-spec" id="predSpec"></div>
+        <div class="pred-conf" id="predConf"></div>
+        <div id="predBars"></div>
+        <a href="#" id="predLink" class="hero-btn hero-btn-white" style="margin-top:14px;display:inline-flex;font-size:13px;padding:9px 18px;background:var(--blue);color:white">View Matching Doctors →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">100<sup>+</sup></div><div class="stat-lbl">Verified Doctors</div></div>
+    <div class="stat-item"><div class="stat-num">20</div><div class="stat-lbl">Specializations</div></div>
+    <div class="stat-item"><div class="stat-num">98<sup>%</sup></div><div class="stat-lbl">ML Accuracy</div></div>
+    <div class="stat-item"><div class="stat-num">1200<sup>+</sup></div><div class="stat-lbl">Training Records</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="background:var(--bg)">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label">Simple Process</div>
+      <div class="section-title">How It <span>Works</span></div>
+      <div class="section-sub">Get the right medical care in 4 simple steps</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><div class="step-icon"><i class="fas fa-clipboard-list"></i></div><div class="step-title">Enter Symptoms</div><div class="step-desc">Type your symptoms with smart autocomplete suggestions from 154 options.</div></div>
+      <div class="step-card"><div class="step-num">2</div><div class="step-icon"><i class="fas fa-brain"></i></div><div class="step-title">AI Analysis</div><div class="step-desc">Random Forest ML model predicts the right specialization with high accuracy.</div></div>
+      <div class="step-card"><div class="step-num">3</div><div class="step-icon"><i class="fas fa-user-md"></i></div><div class="step-title">Find Doctors</div><div class="step-desc">Browse verified specialists filtered by city, fees, experience and rating.</div></div>
+      <div class="step-card"><div class="step-num">4</div><div class="step-icon"><i class="fas fa-calendar-check"></i></div><div class="step-title">Book Appointment</div><div class="step-desc">Book directly with your chosen doctor and get instant confirmation.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALIZATIONS -->
+<section class="section" style="background:white;border-top:1px solid var(--border)">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label">Browse by Category</div>
+      <div class="section-title">All <span>Specializations</span></div>
+    </div>
+    <div class="spec-grid">
+      <a href="/find-doctors?spec=Cardiologist" class="spec-chip"><i class="fas fa-heart"></i><span>Cardiologist</span></a>
+      <a href="/find-doctors?spec=Dermatologist" class="spec-chip"><i class="fas fa-allergies"></i><span>Dermatologist</span></a>
+      <a href="/find-doctors?spec=Neurologist" class="spec-chip"><i class="fas fa-brain"></i><span>Neurologist</span></a>
+      <a href="/find-doctors?spec=Orthopedist" class="spec-chip"><i class="fas fa-bone"></i><span>Orthopedist</span></a>
+      <a href="/find-doctors?spec=Gastroenterologist" class="spec-chip"><i class="fas fa-circle"></i><span>Gastro</span></a>
+      <a href="/find-doctors?spec=Pulmonologist" class="spec-chip"><i class="fas fa-lungs"></i><span>Pulmonologist</span></a>
+      <a href="/find-doctors?spec=Endocrinologist" class="spec-chip"><i class="fas fa-dna"></i><span>Endocrinologist</span></a>
+      <a href="/find-doctors?spec=Ophthalmologist" class="spec-chip"><i class="fas fa-eye"></i><span>Ophthalmologist</span></a>
+      <a href="/find-doctors?spec=ENT+Specialist" class="spec-chip"><i class="fas fa-ear-listen"></i><span>ENT Specialist</span></a>
+      <a href="/find-doctors?spec=Psychiatrist" class="spec-chip"><i class="fas fa-head-side-brain"></i><span>Psychiatrist</span></a>
+      <a href="/find-doctors?spec=Dentist" class="spec-chip"><i class="fas fa-tooth"></i><span>Dentist</span></a>
+      <a href="/find-doctors?spec=Gynecologist" class="spec-chip"><i class="fas fa-venus"></i><span>Gynecologist</span></a>
+      <a href="/find-doctors?spec=Urologist" class="spec-chip"><i class="fas fa-circle"></i><span>Urologist</span></a>
+      <a href="/find-doctors?spec=Oncologist" class="spec-chip"><i class="fas fa-ribbon"></i><span>Oncologist</span></a>
+      <a href="/find-doctors?spec=General+Physician" class="spec-chip"><i class="fas fa-user-md"></i><span>General Physician</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testi-section">
+  <div class="container">
+    <div style="text-align:center"><div class="section-title" style="color:white">What Patients <span style="color:#93C5FD">Say</span></div></div>
+    <div class="testi-grid">
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"The AI predicted I needed a cardiologist within seconds. Turned out exactly right! Booked the same day."</div><div class="testi-author"><div class="testi-avatar">R</div><div><div class="testi-name">Rahul Sharma</div><div class="testi-role">Patient, Delhi</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Found a nearby dermatologist with excellent ratings in minutes. Highly recommend this platform!"</div><div class="testi-author"><div class="testi-avatar">P</div><div><div class="testi-name">Priya Patel</div><div class="testi-role">Patient, Mumbai</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★☆</div><div class="testi-text">"As a doctor, this platform brought dozens of new patients. My appointment calendar fills every week!"</div><div class="testi-author"><div class="testi-avatar">D</div><div><div class="testi-name">Dr. Ananya Reddy</div><div class="testi-role">Neurologist, Bangalore</div></div></div></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let allSyms=[],selected=[];
+fetch('/api/symptoms').then(r=>r.json()).then(d=>{allSyms=d.symptoms});
+const inp=document.getElementById('symInput'),ac=document.getElementById('acList');
+inp.addEventListener('input',function(){
+  const v=this.value.trim().toLowerCase();
+  if(!v||v.length<2){ac.style.display='none';return}
+  const m=allSyms.filter(s=>s.toLowerCase().includes(v)&&!selected.includes(s)).slice(0,8);
+  if(!m.length){ac.style.display='none';return}
+  ac.innerHTML=m.map(s=>`<div class="ac-item" onclick="addSym('${s}')">${s}</div>`).join('');
+  ac.style.display='block';
+});
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'){const f=ac.querySelector('.ac-item');if(f)f.click()}});
+document.addEventListener('click',e=>{if(!e.target.closest('.sym-input-wrap'))ac.style.display='none'});
+
+function addSym(s){
+  // handle comma-separated
+  s.split(',').forEach(part=>{
+    const clean=part.trim();
+    if(clean&&!selected.includes(clean))selected.push(clean);
+  });
+  renderTags();inp.value='';ac.style.display='none';
+}
+function removeSym(s){selected=selected.filter(x=>x!==s);renderTags()}
+function renderTags(){
+  const wrap=document.getElementById('tagsWrap');
+  wrap.innerHTML=selected.map(s=>`<span class="tag">${s}<button onclick="removeSym('${s}')">×</button></span>`).join('');
+}
+async function predict(){
+
+  if(!selected.length){
+    inp.focus();
+    inp.placeholder='Please type a symptom first...';
+    return;
+  }
+
+  const btn=document.getElementById('getBtn');
+
+  btn.textContent='Analyzing...';
+  btn.disabled=true;
+
+  try{
+
+    const r=await fetch('/api/predict',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        symptoms:selected
+      })
+    });
+
+    const d=await r.json();
+
+    if(d.error){
+      alert(d.error);
+      return;
+    }
+
+    // Show specialization
+    document.getElementById('predSpec').textContent=
+      '→ ' + d.primary_specialization;
+
+    // Show matched symptoms text
+    document.getElementById('predConf').textContent=
+      `Based on ${d.matched_symptoms.length} matched symptom(s)`;
+
+    // NEW SINGLE CONFIDENCE BAR
+    document.getElementById('predBars').innerHTML=`
+      <div style="margin-top:10px">
+
+        <div class="conf-bar">
+          <div class="conf-fill" style="width:${d.confidence}%"></div>
+        </div>
+
+        <div style="
+          margin-top:6px;
+          font-size:13px;
+          font-weight:600;
+          color:var(--blue-dark)
+        ">
+          ${d.confidence}% Match
+        </div>
+
+      </div>
+    `;
+
+    // Doctor link
+    document.getElementById('predLink').href=
+      `/find-doctors?spec=${encodeURIComponent(d.primary_specialization)}`;
+
+    // Show prediction box
+    document.getElementById('predBox').classList.add('show');
+
+  }
+
+  catch(e){
+
+    alert('Error: ' + e.message);
+
+  }
+
+  finally{
+
+    btn.textContent='Get Doctor Recommendations →';
+    btn.disabled=false;
+
+  }
+}
+  
+</script>
+{% endblock %}

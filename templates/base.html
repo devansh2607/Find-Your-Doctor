@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>{% block title %}Find Your Doctor{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --blue:#1A8FE3;--blue-dark:#0F72C4;--blue-deeper:#0A5FA8;
+  --blue-grad:linear-gradient(135deg,#1A8FE3 0%,#0F72C4 100%);
+  --white:#FFFFFF;--bg:#F5F8FF;--gray:#6B7280;--gray-light:#F3F4F6;
+  --dark:#111827;--border:#E5E7EB;
+  --green:#10B981;--red:#EF4444;--orange:#F59E0B;
+  --shadow:0 1px 8px rgba(0,0,0,0.08);--shadow-md:0 4px 20px rgba(0,0,0,0.1);
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;font-size:14px}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;box-shadow:var(--shadow)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:60px}
+.nav-left{display:flex;align-items:center;gap:32px}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.nav-logo-icon{color:var(--blue);font-size:20px}
+.nav-logo-text{font-size:16px;font-weight:700;color:var(--dark)}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{padding:6px 12px;border-radius:var(--radius-xs);text-decoration:none;color:var(--gray);font-weight:500;font-size:13px;transition:all .2s;display:flex;align-items:center;gap:6px}
+.nav-links a:hover{color:var(--blue);background:rgba(26,143,227,0.06)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-btn{padding:6px 16px;border-radius:var(--radius-xs);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn-ghost{background:transparent;color:var(--dark);border:1px solid transparent}
+.nav-btn-ghost:hover{background:var(--gray-light)}
+.nav-btn-primary{background:var(--blue);color:white;border:1px solid var(--blue)}
+.nav-btn-primary:hover{background:var(--blue-dark)}
+.nav-btn-outline{background:white;color:var(--dark);border:1px solid var(--border)}
+.nav-btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-sm);font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .2s;text-decoration:none;font-family:'Inter',sans-serif}
+.btn-primary{background:var(--blue);color:white}
+.btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:2px solid var(--blue);color:var(--blue)}
+.btn-outline:hover{background:var(--blue);color:white}
+.btn-white{background:white;color:var(--blue);font-weight:700}
+.btn-white:hover{background:#F0F8FF}
+.btn-sm{padding:7px 14px;font-size:13px}
+
+/* FLASH */
+.flash-container{position:fixed;top:70px;right:20px;z-index:9999}
+.flash{padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:8px;font-weight:500;font-size:13px;animation:slideIn .3s ease;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:8px}
+.flash-success{background:#ECFDF5;color:#065F46;border-left:3px solid var(--green)}
+.flash-error{background:#FEF2F2;color:#991B1B;border-left:3px solid var(--red)}
+@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* CARDS */
+.card{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;border:1px solid var(--border)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-blue{background:rgba(26,143,227,0.1);color:var(--blue)}
+.badge-green{background:#ECFDF5;color:#065F46}
+
+/* FORM */
+.form-group{margin-bottom:16px}
+.form-label{display:block;margin-bottom:5px;font-weight:600;font-size:13px;color:var(--dark)}
+.form-control{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);transition:all .2s;background:white;outline:none}
+.form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,143,227,0.12)}
+select.form-control{cursor:pointer}
+
+/* MISC */
+.section{padding:64px 24px}
+.container{max-width:1200px;margin:0 auto}
+.spinner{width:28px;height:28px;border:3px solid rgba(26,143,227,0.15);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:24px auto;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FOOTER */
+footer{background:#1E2A3B;color:#9CA3AF;padding:48px 24px 24px;margin-top:80px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.footer-logo{font-size:18px;font-weight:700;color:white;margin-bottom:10px}
+.footer-heading{color:white;font-weight:600;margin-bottom:14px;font-size:14px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-links a{color:#9CA3AF;text-decoration:none;font-size:13px;transition:color .2s}
+.footer-links a:hover{color:var(--blue)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;margin-top:36px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+</style>
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="flash-container">
+{% with messages=get_flashed_messages(with_categories=true) %}
+  {% for cat,msg in messages %}
+  <div class="flash flash-{{ cat }}"><i class="fas fa-{{ 'check-circle' if cat=='success' else 'exclamation-circle' }}"></i>{{ msg }}</div>
+  {% endfor %}
+{% endwith %}
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">
+        <i class="fas fa-stethoscope nav-logo-icon"></i>
+        <span class="nav-logo-text">Find Your Doctor</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/"><i class="fas fa-robot" style="font-size:12px"></i> AI Recommend</a></li>
+        <li><a href="/find-doctors"><i class="fas fa-user-md" style="font-size:12px"></i> Doctors</a></li>
+        {% if session.get('uid') %}
+          {% if session.get('role')=='doctor' %}
+            <li><a href="/doctor/dashboard"><i class="fas fa-th-large" style="font-size:12px"></i> Dashboard</a></li>
+          {% else %}
+            <li><a href="/patient/dashboard"><i class="fas fa-th-large" style="font-size:12px"></i> My Account</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+    <div class="nav-right">
+      {% if session.get('uid') %}
+        <a href="/logout" class="nav-btn nav-btn-ghost">Logout</a>
+      {% else %}
+        <a href="/login" class="nav-btn nav-btn-ghost">Login</a>
+        <a href="/register" class="nav-btn nav-btn-primary">Sign Up</a>
+        <a href="/login" class="nav-btn nav-btn-outline"><i class="fas fa-user-md" style="font-size:12px"></i> Doctor Login</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">🩺 Find Your Doctor</div>
+        <p style="font-size:13px;line-height:1.7;margin-bottom:16px">AI-powered healthcare platform connecting patients with the right specialists instantly.</p>
+        <div style="display:flex;gap:12px">
+          <a href="#" style="color:#9CA3AF;font-size:16px"><i class="fab fa-twitter"></i></a>
+          <a href="#" style="color:#9CA3AF;font-size:16px"><i class="fab fa-linkedin"></i></a>
+          <a href="#" style="color:#9CA3AF;font-size:16px"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div><div class="footer-heading">Patients</div><ul class="footer-links"><li><a href="/find-doctors">Find Doctors</a></li><li><a href="/register">Create Account</a></li></ul></div>
+      <div><div class="footer-heading">Doctors</div><ul class="footer-links"><li><a href="/register">Join Platform</a></li><li><a href="/doctor/dashboard">Dashboard</a></li><li><a href="/doctor/edit-profile">Edit Profile</a></li></ul></div>
+      <div><div class="footer-heading">Support</div><ul class="footer-links"><li><a href="#">Help Center</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 FindYourDoctor. All rights reserved.</span><span>Made with ❤️ for better healthcare</span></div>
+  </div>
+</footer>
+<script>setTimeout(()=>{document.querySelectorAll('.flash').forEach(el=>{el.style.transition='opacity .5s';el.style.opacity='0';setTimeout(()=>el.remove(),500)})},4000)</script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>
