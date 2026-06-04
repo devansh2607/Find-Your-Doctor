@@ -23,7 +23,6 @@ Find Your Doctor helps users identify the most appropriate medical specialist ba
 - Flask
 - Scikit-Learn
 - Random Forest
-- MySQL
 - Bootstrap
 - HTML/CSS
 
